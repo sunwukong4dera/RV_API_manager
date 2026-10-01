@@ -1,0 +1,43 @@
+updated Дата обновления
+type_group Группа типа
+type Тип инцидента
+status Статус инцидента
+occur_date Дата возникновения
+rel Связанные активы: assets,
+    departments, devices, staff,
+    information, processes
+level Уровень критичности
+incident_uuid uuid инцидента
+incident_owner Ответственный
+incident_creator Автор
+identifier Идентификатор инцидента
+files Файлы свидетельств
+detection_date Дата обнаружения
+description Краткое описание инцидента
+deadline_date Плановая дата устранения
+creation Дата создания
+company JSON объект Организация.
+    Организацию можно указать следующими способами:
+    • “company”: { “id”: <id
+    integer> }
+    • “company”: { “uuid”: “uuid
+    string” }
+    • “company”: { “name”:
+    “company name string” }
+    Использование конструкции
+    “company”: “company name
+    string” нежелательно и будет
+    запрещено в дальнейших
+    версиях системы.
+company_id Идентификактор организации
+    инцидента. Использование
+    нежелательно и будет
+    запрещено в дальнейших
+    версиях системы.
+causes Причины возникновения
+category Категория инцидента
+iocs Индикаторы инцидента
+iocs_types Типы индикаторов (только
+    для фильтрации)
+iocs_values Значения индикаторов
+    (только для фильтрации)
