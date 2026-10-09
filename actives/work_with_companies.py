@@ -22,18 +22,25 @@ def get_companies_list(limit: int,
 
     :return: json response
     """
-    if sort is None:
-        sort = {}
-    else:
-        sort = [{"property": sort['sort_field'], "direction": sort['sort_direction']}]
+    if type(fields) is list:
+        fields = ','.join(fields)
 
-    if filter is None:
-        filter = {}
-    else:
-        filter = [{"property": filter['filter_name'],
-                  "operator": filter['filter_operator'],
-                  "value": filter['filter_value']}]
+    if sort is not None:
+        sort = json.dumps([
+            {
+                "property": sort['sort_field'],
+                "direction": sort['sort_direction']
+            }
+        ])
 
+    if filter is not None:
+        filter = json.dumps([
+            {
+                "property": filter["filter_name"],
+                "operator": filter["filter_operator"],
+                "value": filter["filter_value"],
+            }
+        ])
     headers = {
         'X-Token': TOKEN
     }
@@ -47,12 +54,16 @@ def get_companies_list(limit: int,
     response = get(f'https://{RV_LINK}/api/v2/companies/',
                    headers=headers,
                    params=payload,
-                   verify=RV_CERT)
+                   verify=RV_CERT,
+                   timeout=10)
 
+    response.raise_for_status()
     print(response.url)
 
     return response.json()
 
+if __name__ == '__main__':
+    result = get_companies_list(limit=100)
 
-with open('companies.json', 'w', encoding='utf-8') as f:
-    json.dump(get_companies_list(limit=100), f, ensure_ascii=False, indent=2)
+    with open('companies.json', 'w', encoding='utf-8') as f:
+        json.dump(result, f, ensure_ascii=False, indent=2)

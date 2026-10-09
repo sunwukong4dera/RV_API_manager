@@ -25,18 +25,22 @@ def get_incidents_list(limit: int,
     if type(fields) is list:
         fields = ','.join(fields)
 
-    if sort is None:
-        sort = {}
-    else:
-        sort = [{"property": sort['sort_field'], "direction": sort['sort_direction']}]
+    if sort is not None:
+        sort = json.dumps([
+            {
+                "property": sort['sort_field'],
+                "direction": sort['sort_direction']
+            }
+        ])
 
-    if filter is None:
-        filter = {}
-    else:
-        filter = [{"property": filter['filter_name'],
-                  "operator": filter['filter_operator'],
-                  "value": filter['filter_value']}]
-
+    if filter is not None:
+        filter = json.dumps([
+            {
+                "property": filter["filter_name"],
+                "operator": filter["filter_operator"],
+                "value": filter["filter_value"],
+            }
+        ])
     headers = {
         'X-Token': TOKEN
     }
@@ -50,7 +54,10 @@ def get_incidents_list(limit: int,
     response = get(f'https://{RV_LINK}/api/v2/incidents/',
                    headers=headers,
                    params=payload,
-                   verify=RV_CERT)
+                   verify=RV_CERT,
+                   timeout=10)
+
+    response.raise_for_status()
     print(response.url)
     # https://rv-soar-app.jetcsirt.loc/api/v2/incidents/?limit=10&fields=type%2Cincident_uuid%2Cidentifier%2Cincident_owner&offset=0
     # https://rv-soar-app.jetcsirt.loc/api/v2/companies/?limit=100
@@ -59,6 +66,9 @@ def get_incidents_list(limit: int,
     return response.json()
 
 
-with open('incidents.json', 'w', encoding='utf-8') as f:
-    json.dump(get_incidents_list(limit=10), f, ensure_ascii=False, indent=2)
-    # , offset=0, fields=["type", "incident_uuid", "identifier", "incident_owner"]
+if __name__ == '__main__':
+    result = get_incidents_list(limit=10)
+
+    with open('incidents.json', 'w', encoding='utf-8') as f:
+        json.dump(result, f, ensure_ascii=False, indent=2)
+        # , offset=0, fields=["type", "incident_uuid", "identifier", "incident_owner"]
