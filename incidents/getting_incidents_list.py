@@ -6,7 +6,7 @@ from config import RV_LINK, TOKEN, RV_CERT
 
 
 def get_incidents_list(limit: int,
-                       fields: list | None=None,
+                       fields: list | str | None=None,
                        filter: dict | None=None,
                        sort: dict | None=None,
                        offset: int | None=None) -> dict:
@@ -22,6 +22,9 @@ def get_incidents_list(limit: int,
 
     :return: json response
     """
+    if type(fields) is list:
+        fields = ','.join(fields)
+
     if sort is None:
         sort = {}
     else:
@@ -48,9 +51,14 @@ def get_incidents_list(limit: int,
                    headers=headers,
                    params=payload,
                    verify=RV_CERT)
+    print(response.url)
+    # https://rv-soar-app.jetcsirt.loc/api/v2/incidents/?limit=10&fields=type%2Cincident_uuid%2Cidentifier%2Cincident_owner&offset=0
+    # https://rv-soar-app.jetcsirt.loc/api/v2/companies/?limit=100
+    # https://rv-soar-app.jetcsirt.loc/api/v2/incidents/?limit=10
 
     return response.json()
 
 
-with open('output.json', 'w', encoding='utf-8') as f:
-    json.dump(get_incidents_list(limit=10, offset=10, fields=["type", "incident_uuid", "identifier", "incident_owner"]), f, ensure_ascii=False, indent=2)
+with open('incidents.json', 'w', encoding='utf-8') as f:
+    json.dump(get_incidents_list(limit=10), f, ensure_ascii=False, indent=2)
+    # , offset=0, fields=["type", "incident_uuid", "identifier", "incident_owner"]

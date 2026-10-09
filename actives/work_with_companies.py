@@ -49,6 +49,8 @@ def get_companies_list(limit: int,
                    params=payload,
                    verify=RV_CERT)
 
+    print(response.url)
+
     return response.json()
 
 
