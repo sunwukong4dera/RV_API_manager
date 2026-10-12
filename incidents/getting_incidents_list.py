@@ -7,7 +7,7 @@ from config import RV_LINK, TOKEN, RV_CERT
 
 def get_incidents_list(limit: int,
                        fields: list | str | None=None,
-                       filter: dict | None=None,
+                       filter: list | None=None,
                        sort: dict | None=None,
                        offset: int | None=None) -> dict:
     """
@@ -33,14 +33,6 @@ def get_incidents_list(limit: int,
             }
         ])
 
-    if filter is not None:
-        filter = json.dumps([
-            {
-                "property": filter["filter_name"],
-                "operator": filter["filter_operator"],
-                "value": filter["filter_value"],
-            }
-        ])
     headers = {
         'X-Token': TOKEN
     }
@@ -67,7 +59,15 @@ def get_incidents_list(limit: int,
 
 
 if __name__ == '__main__':
-    result = get_incidents_list(limit=10)
+    filter = [{
+        "property": "company",
+        "operator": "=",
+        "value": {
+            "id": 1,
+            "name": "Company"
+        },
+    }]
+    result = get_incidents_list(limit=5, filter=filter)
 
     with open('incidents.json', 'w', encoding='utf-8') as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
