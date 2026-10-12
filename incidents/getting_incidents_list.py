@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 from requests import get
 
@@ -71,8 +72,11 @@ if __name__ == '__main__':
             },
         }
     ]
-    result = get_incidents_list(limit=5, filter=filters)
+    result = get_incidents_list(limit=5)
 
-    with open('incidents.json', 'w', encoding='utf-8') as f:
+    current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    filename = f"incidents_{current_time}.json"
+
+    with open(filename, 'w', encoding='utf-8') as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
         # , offset=0, fields=["type", "incident_uuid", "identifier", "incident_owner"]
