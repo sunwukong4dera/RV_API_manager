@@ -15,9 +15,9 @@ def get_incidents_list(limit: int,
     :param limit:
 
     not require:
-    :param fields:
-    :param filter:
-    :param sort:
+    :param fields: поля инцидента
+    :param filter: фильтр по которому будут выводиться инциденты (по умолчанию operator: '=')
+    :param sort: сортировка инцидентов
     :param offset:
 
     :return: json response
@@ -32,6 +32,9 @@ def get_incidents_list(limit: int,
                 "direction": sort['sort_direction']
             }
         ])
+
+    if filter is not None:
+        filter = json.dumps(filter)
 
     headers = {
         'X-Token': TOKEN
@@ -59,15 +62,16 @@ def get_incidents_list(limit: int,
 
 
 if __name__ == '__main__':
-    filter = [{
-        "property": "company",
-        "operator": "=",
-        "value": {
-            "id": 1,
-            "name": "Company"
-        },
-    }]
-    result = get_incidents_list(limit=5, filter=filter)
+    filters = [
+        {
+            "property": "company",
+            "operator": "=",
+            "value": {
+                "uuid": ""
+            },
+        }
+    ]
+    result = get_incidents_list(limit=5, filter=filters)
 
     with open('incidents.json', 'w', encoding='utf-8') as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
