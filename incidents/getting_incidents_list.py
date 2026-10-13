@@ -1,7 +1,7 @@
 import json
-from datetime import datetime
 
 from requests import get
+from urllib.parse import unquote
 
 from config import RV_LINK, TOKEN, RV_CERT
 
@@ -54,29 +54,6 @@ def get_incidents_list(limit: int,
                    timeout=10)
 
     response.raise_for_status()
-    print(response.url)
-    # https://rv-soar-app.jetcsirt.loc/api/v2/incidents/?limit=10&fields=type%2Cincident_uuid%2Cidentifier%2Cincident_owner&offset=0
-    # https://rv-soar-app.jetcsirt.loc/api/v2/companies/?limit=100
-    # https://rv-soar-app.jetcsirt.loc/api/v2/incidents/?limit=10
+    print(unquote(response.url))
 
     return response.json()
-
-
-if __name__ == '__main__':
-    filters = [
-        {
-            "property": "company",
-            "operator": "=",
-            "value": {
-                "uuid": ""
-            },
-        }
-    ]
-    result = get_incidents_list(limit=5)
-
-    current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    filename = f"incidents_{current_time}.json"
-
-    with open(filename, 'w', encoding='utf-8') as f:
-        json.dump(result, f, ensure_ascii=False, indent=2)
-        # , offset=0, fields=["type", "incident_uuid", "identifier", "incident_owner"]

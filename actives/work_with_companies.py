@@ -14,6 +14,9 @@ def get_companies_list(limit: int,
     require:
     :param limit:
 
+    пример:
+        get_companies_list(limit=100, fields=['id', 'name'])
+
     not require:
     :param fields:
     :param filter:
@@ -61,9 +64,3 @@ def get_companies_list(limit: int,
     print(response.url)
 
     return response.json()
-
-if __name__ == '__main__':
-    result = get_companies_list(limit=100)
-
-    with open('companies.json', 'w', encoding='utf-8') as f:
-        json.dump(result, f, ensure_ascii=False, indent=2)
