@@ -3,25 +3,7 @@ from util import write_to_file
 
 
 def main():
-    # получение инцидентов только по компании
-    filter_company = [
-        {
-            "property": "company",
-            "operator": "=",
-            "value": 58
-        }
-    ]
-
-    # получение инцидентов только по пользователю
-    filter_owner = [
-        {
-            "property": "incident_owner",
-            "operator": "=",
-            "value": 421
-        }
-    ]
-
-    # получение инцидентов по пользователю и компании
+    # получение инцидентов по пользователю и компании, только инциденты (Подозрение на инцидент (событие ИБ))
     filters_owner_company = [
         {
             "property": "incident_owner",
@@ -31,18 +13,21 @@ def main():
         {
             "property": "company",
             "operator": "=",
-            "value": 58
+            "value": 10
+        },
+        {
+            "property": "type",
+            "operator": "=",
+            "value": 31
+        },
+        {
+            "property": "status",
+            "operator": "!=",
+            "value": 62
         }
     ]
 
-    incident_fields = [
-        "incident_uuid",
-        "identifier",
-        "type",
-        "company",
-        "incident_owner",
-        "status"
-    ]
+    incident_fields = "type_group,type,status,rel,identifier,description,company,company_id,category"
 
     result = get_incidents_list(limit=10, fields=incident_fields, filter=filters_owner_company)
     write_to_file(result)

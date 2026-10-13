@@ -1,5 +1,6 @@
 from get_another_incidents import get_another
 
+
 def search_incident(incidents: list):
     for incident in incidents:
         dict_requirement_params = {}
