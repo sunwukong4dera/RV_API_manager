@@ -1,44 +1,23 @@
-import json
-
 from incidents import get_incidents_list
+from util import get_latest
 
 
-def get_another(filter: list[dict]) -> dict:
-    another_incidents_list = get_incidents_list(limit=10, filter=filter)
-    return another_incidents_list
-
-
-def main() -> None:
+def check_applicants_from_filtered(filters: list[dict]) -> list:
     """
-    вызывается функиця которая по полям уже известного инцидента проверяет другие по орге и идентификатору
-    и находит по правилу (например одинаковая цель)
+    ручная проверка
 
+    :param filters:
     :return:
     """
-    filters = [
-        {
-            "property": "incident_owner",
-            "operator": "=",
-            "value": 421
-        },
-        {
-            "property": "company",
-            "operator": "=",
-            "value": 58
-        },
-        {
-            "property": "type",
-            "operator": "=",
-            "value": 31
-        },
-        {
-            "property": "status",
-            "operator": "!=",
-            "value": 62
-        }
-    ]
-    get_another(filters)
+    applicants_from_filtered_raw_dict: dict = get_incidents_list(limit=100, filter=filters)
+    applicants_from_filtered_data = applicants_from_filtered_raw_dict.get('data')
+    applicants_from_filtered_list: list = applicants_from_filtered_data.get('result')
+
+    print(f'filters: {(filter.get("value") for filter in filters)}\n'
+          f'len of applicants list: {len(applicants_from_filtered_list)}\n'
+          f'the most late: {get_latest(applicants_from_filtered_list)}\n'
+          f'{applicants_from_filtered_list}')
+
+    return applicants_from_filtered_list
 
 
-if __name__ == "__main__":
-    main()

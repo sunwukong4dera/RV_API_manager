@@ -4,6 +4,7 @@ from util import write_to_file
 
 def main():
     # получение инцидентов по пользователю и компании, только инциденты (Подозрение на инцидент (событие ИБ))
+    # и не статус закрыт
     filters_owner_company = [
         {
             "property": "incident_owner",
@@ -27,7 +28,7 @@ def main():
         }
     ]
 
-    incident_fields = "type_group,type,status,rel,identifier,description,company,company_id,category"
+    incident_fields = "incident_uuid,type_group,type,status,rel,identifier,description,company,company_id,category"
 
     result = get_incidents_list(limit=10, fields=incident_fields, filter=filters_owner_company)
     write_to_file(result)
