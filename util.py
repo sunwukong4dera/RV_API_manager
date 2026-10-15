@@ -4,7 +4,7 @@ from datetime import datetime
 from config import API_RESPONSES
 
 
-def write_to_file(data):
+def write_to_file(data) -> None:
     current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     filename = f"incidents_{current_time}.json"
 
@@ -12,11 +12,14 @@ def write_to_file(data):
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
-def get_latest(list_values: list) -> dict:
+def get_oldest(incidents: list[dict]) -> dict | None:
+    if not incidents:
+        return None
+
     return min(
-        list_values,
-        key=lambda incident_time: datetime.strptime(
-            incident_time["card_start_time"],
-            "%d-%m-%Y %H:%M:%S MSK"
+        incidents,
+        key=lambda incident: datetime.strptime(
+            incident["creation"],
+            "%Y-%m-%dT%H:%M:%S.%fZ"
         )
     )

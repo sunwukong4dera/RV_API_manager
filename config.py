@@ -1,9 +1,15 @@
-from dotenv import load_dotenv
+import json
 import os
+from dotenv import load_dotenv
 
 load_dotenv()
 
-RV_LINK = os.getenv('RV_LINK')
-TOKEN = os.getenv('TOKEN')
-RV_CERT = os.getenv('RV_CERT')
-API_RESPONSES = os.getenv('API_RESPONSES')
+RV_LINK = os.environ['RV_LINK']
+TOKEN = os.environ['TOKEN']
+RV_CERT = os.environ['RV_CERT']
+API_RESPONSES = os.environ['API_RESPONSES']
+
+BASE_INCIDENTS_COUNT_FOR_CHECK_TO_BIND=os.environ['BASE_INCIDENTS_COUNT_FOR_CHECK_TO_BIND']
+BASE_INCIDENTS_COUNT_FOR_CHECK_TO_APPLICANT=os.environ['BASE_INCIDENTS_COUNT_FOR_CHECK_TO_APPLICANT']
+BASE_INCIDENT_FIELDS = os.environ['BASE_INCIDENT_FIELDS']
+BASE_INCIDENT_NOT_CLOSE_FILTER = json.loads(os.environ['BASE_INCIDENT_NOT_CLOSE_FILTER'])
