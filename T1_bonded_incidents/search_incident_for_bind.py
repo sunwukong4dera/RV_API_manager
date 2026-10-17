@@ -20,14 +20,16 @@ def search_incident():
             company = incident.get('company')
             company_id = company.get('id')
 
-            description = incident.get('description')
+            externalid = incident.get('externalid')
+            identifier = incident.get('identifier')
 
             incident_owner = incident.get('incident_owner')
-            incident_owner_id = incident_owner.get('id')
-            if incident_owner_id is not None:
-                print(' - ответственный (id):', incident_owner_id) # todo забрать инфу из активов об пользаке и его теге
-            else:
-                print(' - нет ответственного')
+            if incident_owner is not None:
+                incident_owner_id = incident_owner.get('id')
+                if incident_owner_id is not None:
+                    print(' - ответственный (id):', incident_owner_id) # todo использовать актив уведомлений (?)
+                else:
+                    print(' - нет ответственного')
             print('Начало проверки...')
 
             filters_for_applicants = [
@@ -37,9 +39,9 @@ def search_incident():
                     "value": company_id
                 },
                 {
-                    "property": "description",
+                    "property": "externalid",
                     "operator": "=",
-                    "value": description
+                    "value": externalid
                 },
                 {
                     "property": "status",
@@ -47,6 +49,9 @@ def search_incident():
                     "value": 62
                 }
             ]
-            applicants_list: list = check_applicants_from_filtered(filters_for_applicants=filters_for_applicants)
+            applicants_list: list = check_applicants_from_filtered(
+                filters_for_applicants=filters_for_applicants,
+                current_identifier=identifier
+            )
 
         sleep(60)

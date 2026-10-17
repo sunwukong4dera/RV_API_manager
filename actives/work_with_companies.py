@@ -2,7 +2,7 @@ import json
 
 from requests import get
 
-from config import RV_LINK, TOKEN, RV_CERT
+from config import RV_LINK, RV_TOKEN, RV_CERT
 
 
 def get_companies_list(limit: int,
@@ -45,7 +45,8 @@ def get_companies_list(limit: int,
             }
         ])
     headers = {
-        'X-Token': TOKEN
+        'X-Token': RV_TOKEN,
+        "Content-Type": "application/json"
     }
 
     payload: dict = {'limit': limit,
