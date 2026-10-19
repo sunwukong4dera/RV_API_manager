@@ -1,6 +1,6 @@
 import requests
 
-from config import RV_TOKEN, RV_LINK, RV_CERT
+from config import RV_TOKEN, RV_LINK, RV_CERT_PATH
 
 
 def get_asset_data(request_params: dict,
@@ -17,7 +17,7 @@ def get_asset_data(request_params: dict,
         url,
         headers=headers,
         params=request_params,
-        verify=RV_CERT
+        verify=RV_CERT_PATH
     )
 
     return asset_data

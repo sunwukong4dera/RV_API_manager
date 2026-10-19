@@ -3,7 +3,7 @@ import json
 from requests import get
 from urllib.parse import unquote
 
-from config import RV_LINK, RV_TOKEN, RV_CERT
+from config import RV_LINK, RV_TOKEN, RV_CERT_PATH
 
 
 def get_incidents_list(limit: int,
@@ -51,7 +51,7 @@ def get_incidents_list(limit: int,
     response = get(f'https://{RV_LINK}/api/v2/incidents/',
                    headers=headers,
                    params=payload,
-                   verify=RV_CERT,
+                   verify=RV_CERT_PATH,
                    timeout=10)
 
     response.raise_for_status()

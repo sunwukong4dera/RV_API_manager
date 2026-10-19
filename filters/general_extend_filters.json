@@ -1,0 +1,18 @@
+[
+  {
+    "10.JC-HC-003-010": [
+      {
+        "property": "parser_source_user_name",
+        "operator": "=",
+        "value": "ms-mpscanner$"
+      }
+    ],
+    "1.JC-HC-0": [
+      {
+        "property": "",
+        "operator": "=",
+        "value": ""
+      }
+    ]
+  }
+]

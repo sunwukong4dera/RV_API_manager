@@ -1,25 +1,30 @@
 from requests import post
 from urllib.parse import unquote
 
-from config import RV_LINK, TOKEN, RV_CERT
+from config import RV_LINK, RV_TOKEN, RV_CERT_PATH
 
 
-def add_bonded_incident(uuid_incident: str) -> dict:
+def add_bonded_incident(current_incident_uuid: str, incident_uuid: str) -> dict:
     """
-
-    :param uuid_incident: - uuid-идентификатор инцидента
+    :param current_incident_uuid: - uuid-идентификатор инцидента, который мы подвязываем
+    :param incident_uuid: - uuid-идентификатор инцидента, который мы подвязываем
     :return:
     """
+    url = f'https://{RV_LINK}/api/v2/incidents/{current_incident_uuid}/incidents/'
+
     headers = {
-        'X-Token': TOKEN
+        'X-Token': RV_TOKEN,
+        "Content-Type": "application/json"
     }
 
-    payload: dict = {'uuid_incident': uuid_incident}
+    payload: dict = {
+        'incident_uuid': incident_uuid
+    }
 
-    response = post(f'https://{RV_LINK}/api/v2/incidents/',
+    response = post(url=url,
                    headers=headers,
                    params=payload,
-                   verify=RV_CERT,
+                   verify=RV_CERT_PATH,
                    timeout=10)
 
     response.raise_for_status()

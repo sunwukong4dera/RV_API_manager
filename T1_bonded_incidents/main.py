@@ -3,7 +3,7 @@ from search_incident_for_bind import search_incident
 
 def main():
     """
-    новобев пока что исключен до дальнейшего решения
+    компания с id 54 пока что исключена до дальнейшего решения
 
     :return:
     """

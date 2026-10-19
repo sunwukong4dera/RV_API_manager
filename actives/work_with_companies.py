@@ -2,7 +2,7 @@ import json
 
 from requests import get
 
-from config import RV_LINK, RV_TOKEN, RV_CERT
+from config import RV_LINK, RV_TOKEN, RV_CERT_PATH
 
 
 def get_companies_list(limit: int,
@@ -58,7 +58,7 @@ def get_companies_list(limit: int,
     response = get(f'https://{RV_LINK}/api/v2/companies/',
                    headers=headers,
                    params=payload,
-                   verify=RV_CERT,
+                   verify=RV_CERT_PATH,
                    timeout=10)
 
     response.raise_for_status()
