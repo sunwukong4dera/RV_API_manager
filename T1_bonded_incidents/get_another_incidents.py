@@ -1,11 +1,16 @@
+import logging
 from incidents import get_incidents_list
-from util import get_oldest
+from datetime import datetime
+
+from util import get_oldest, get_incident_results
 from config import BASE_INCIDENTS_COUNT_FOR_CHECK_TO_APPLICANT, BASE_INCIDENT_FIELDS
+
+logger = logging.getLogger(__name__)
 
 
 def check_applicants_from_filtered(
         filters_for_applicants: list[dict],
-        current_identifier: str,
+        current_incident: dict,
 ) -> list:
     """
     ручная проверка, подбор всех кондидатов по фильтрам, заданным по основному инциденту
@@ -15,7 +20,7 @@ def check_applicants_from_filtered(
         пространства имен ключей на версии или отдельные файлы-ключи.
     + связывание инцидента по post РЕАЛИЗОВАНО но не проверено потому что у текущего ключа нет прав (?)
 
-    :param current_identifier: идентификатор текущего инцидента
+    :param current_incident: текущая карточка из основного списка
     :param filters_for_applicants: фильтр, переданный по текущему инциденту
     :return:
     """
@@ -26,34 +31,30 @@ def check_applicants_from_filtered(
         filter=filters_for_applicants
     )
 
-    applicants_from_filtered_data = applicants_from_filtered_raw_dict.get('data')
-    applicants_list: list = applicants_from_filtered_data.get('result')
+    applicants_list = get_incident_results(applicants_from_filtered_raw_dict)
+    current_identifier = current_incident['identifier']
+    current_creation = datetime.strptime(current_incident['creation'], "%Y-%m-%dT%H:%M:%S.%fZ")
 
-    current_incident = next(
-        (
-            incident for incident in applicants_list
-            if incident.get('identifier') == current_identifier
-        ),
-        None
-    )
-
-    if current_incident is None:
-        print(f'Инцидент {current_identifier} не найден')
-        return []
-
-    applicants_except_current = [
-        incident for incident in applicants_list
-        if incident.get('identifier') != current_identifier
-        and incident['creation'] < current_incident['creation']
-    ]
+    applicants_except_current = []
+    for incident in applicants_list:
+        if not isinstance(incident, dict) or not incident.get('identifier'):
+            logger.warning('Пропуск кандидата: нет идентификатора')
+            continue
+        if incident['identifier'] == current_identifier:
+            continue
+        try:
+            creation = datetime.strptime(incident['creation'], "%Y-%m-%dT%H:%M:%S.%fZ")
+        except (KeyError, TypeError, ValueError):
+            logger.warning(f"Пропуск кандидата {incident['identifier']}: неверная дата creation")
+            continue
+        if creation < current_creation:
+            applicants_except_current.append(incident)
 
     oldest = get_oldest(applicants_except_current)
 
-    print(
-        f'Проверка кандидатов для: {current_identifier}\n'
+    logger.info(f'Проверка кандидатов для: {current_identifier}\n'
         f' - указанные фильтры: {[f.get("value") for f in filters_for_applicants]}\n'
         f' - длина списка кандидатов: {len(applicants_except_current)}\n'
-        f' - старейший кандидат: {oldest}\n'
-    )
+        f' - старейший кандидат: {oldest}\n')
 
     return applicants_except_current

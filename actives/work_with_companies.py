@@ -1,8 +1,11 @@
+import logging
 import json
 
 from requests import get
 
 from config import RV_LINK, RV_TOKEN, RV_CERT_PATH
+
+logger = logging.getLogger(__name__)
 
 
 def get_companies_list(limit: int,
@@ -62,6 +65,6 @@ def get_companies_list(limit: int,
                    timeout=10)
 
     response.raise_for_status()
-    print(response.url)
+    logger.info(response.url)
 
     return response.json()

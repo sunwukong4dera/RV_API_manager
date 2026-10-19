@@ -1,9 +1,12 @@
+import logging
 import json
 
 from urllib.parse import unquote
 
 from general_function import get_asset_data
 from config import ASSET_ID_USERS
+
+logger = logging.getLogger(__name__)
 
 
 def get_users(limit: int,
@@ -50,6 +53,6 @@ def get_users(limit: int,
                               asset_type_id=ASSET_ID_USERS
                               )
 
-    print('ЗАПРОС:', unquote(response.url))
+    logger.info('%s %s', 'ЗАПРОС:', unquote(response.url))
 
     return response.json()

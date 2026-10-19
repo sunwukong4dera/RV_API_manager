@@ -1,7 +1,10 @@
+import logging
 from requests import post
 from urllib.parse import unquote
 
 from config import RV_LINK, RV_TOKEN, RV_CERT_PATH
+
+logger = logging.getLogger(__name__)
 
 
 def add_bonded_incident(current_incident_uuid: str, incident_uuid: str) -> dict:
@@ -28,6 +31,6 @@ def add_bonded_incident(current_incident_uuid: str, incident_uuid: str) -> dict:
                    timeout=10)
 
     response.raise_for_status()
-    print(unquote(response.url))
+    logger.info(unquote(response.url))
 
     return response.json()

@@ -7,10 +7,10 @@ def extend_filter_for_applicants(
 ) -> list:
     """
     функция дополняет фильтр, прибавляя условия, соответствующие уникальному ключу правила на контракте
-        <ключ.правило>
+        <компания.правило>
 
     пример:
-        для контрата с ID: 1 и правилом: "AB-CD-01" ключ будет иметь вид:
+        для контракта с ID: 1 и правилом: "AB-CD-01" ключ будет иметь вид:
         "1.AB-CD-01": [
             {
                 "rule": "NEW RULE",
@@ -32,7 +32,7 @@ def extend_filter_for_applicants(
 
     extend_filter: list | None = get_extend_filter(EXTEND_FILTERS_PATH, company, externalid)
 
-    current_filter = filters_for_applicants
+    current_filter = filters_for_applicants.copy()
     if extend_filter is not None:
         current_filter.extend(extend_filter)
 

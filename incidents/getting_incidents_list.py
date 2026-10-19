@@ -1,9 +1,12 @@
+import logging
 import json
 
 from requests import get
 from urllib.parse import unquote
 
 from config import RV_LINK, RV_TOKEN, RV_CERT_PATH
+
+logger = logging.getLogger(__name__)
 
 
 def get_incidents_list(limit: int,
@@ -55,6 +58,6 @@ def get_incidents_list(limit: int,
                    timeout=10)
 
     response.raise_for_status()
-    print('ЗАПРОС:', unquote(response.url))
+    logger.info('%s %s', 'ЗАПРОС:', unquote(response.url))
 
     return response.json()
