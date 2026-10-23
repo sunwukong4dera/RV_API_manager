@@ -42,20 +42,20 @@ def get_extend_filter(filename: str, company: int, externalid: str) -> list | No
         return current_filters
 
 
-def extend_filter_last_24_hours(current_filters: list) -> list:
-    last_24_hours = (
-            datetime.now(timezone.utc) - timedelta(hours=24)
+def extend_filter_last_n_hours(current_filters: list, hours: int) -> list:
+    last_n_hours = (
+            datetime.now(timezone.utc) - timedelta(hours=hours)
     ).isoformat(timespec="milliseconds").replace("+00:00", "Z")
 
-    filter_last_24_hours = [
+    filter_last_n_hours = [
         {
             "property": "creation",
             "operator": ">=",
-            "value": last_24_hours
+            "value": last_n_hours
         }
     ]
     new_filters = current_filters.copy()
-    new_filters.extend(filter_last_24_hours)
+    new_filters.extend(filter_last_n_hours)
 
     return new_filters
 

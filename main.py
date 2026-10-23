@@ -1,7 +1,8 @@
 import logging
-from util import setup_logging
+import sys
 
-from search_incident_for_bind import search_incident
+from T1_bonded_incidents import explore_incident
+from util import setup_logging
 
 
 logger = logging.getLogger(__name__)
@@ -15,7 +16,9 @@ def main():
     """
     setup_logging()
     try:
-        search_incident()
+        if len(sys.argv) > 1:
+            identifier: str = sys.argv[1]
+            explore_incident(identifier)
     except Exception as error:
         logger.exception('%s', error)
         raise
