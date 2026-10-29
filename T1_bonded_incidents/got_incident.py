@@ -51,17 +51,7 @@ def explore_incident(identifier: str):
         filters_for_applicants=extend_filter_last_n_hours(filters_for_applicants, int(HOURS_FINDING)),
         current_incident=incident,
     )
-    print(len(applicants), *(i.get('identifier') for i in applicants if i is not None))
+    logger.info(f'Длина списка кандидатов для {identifier}: {len(applicants)};'
+                f'Кандидаты: {str(*(i.get("identifier") for i in applicants if i is not None))}')
 
-    return company_id
-
-# проверка - возвращает нужных кандидатов.
-print(explore_incident("26-10-15841"))
-
-
-
-
-
-
-
-
+    return company_id, applicants

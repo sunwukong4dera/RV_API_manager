@@ -13,7 +13,7 @@ def main():
     try:
         if len(sys.argv) > 1:
             identifier: str = sys.argv[1]
-            explore_incident(identifier)
+            company, applicants_list = explore_incident(identifier)
             # todo получение списка правил
     except Exception as error:
         logger.exception('%s', error)
