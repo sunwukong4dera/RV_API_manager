@@ -9,16 +9,12 @@ logger = logging.getLogger(__name__)
 
 
 def main():
-    """
-    компания с id 54 пока что исключена до дальнейшего решения
-
-    :return:
-    """
     setup_logging()
     try:
         if len(sys.argv) > 1:
             identifier: str = sys.argv[1]
             explore_incident(identifier)
+            # todo получение списка правил
     except Exception as error:
         logger.exception('%s', error)
         raise
