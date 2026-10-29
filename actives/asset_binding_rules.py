@@ -3,7 +3,7 @@ import json
 
 from urllib.parse import unquote
 
-from general_function import get_asset_data
+from actives import get_asset_data
 from config import ASSET_BINDING_RULES
 
 
@@ -54,6 +54,17 @@ def get_binding_rules(limit: int,
                               asset_type_id=ASSET_BINDING_RULES
                               )
 
-    logger.info('%s %s', 'ЗАПРОС:', unquote(response.url))
+    print('%s %s', 'ЗАПРОС:', unquote(response.url))
 
     return response.json()
+
+print(get_binding_rules(limit=2,
+                        filter=[
+                            {
+                                "property": "field_binding_rules_org",
+                                "operator": "=",
+                                "value": 'ПИК'
+                            }
+                        ],
+                        fields=["name", "field_binding_rules_org", "field_binding_rules_condition"]
+                        ))

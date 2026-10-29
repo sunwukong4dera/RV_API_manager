@@ -2,6 +2,7 @@ import json
 import logging
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
+from config import COMPANIES_PATH
 
 
 def write_to_json_file(filename: str, data) -> None:
@@ -90,3 +91,14 @@ def setup_logging() -> Path:
         force=True,
     )
     return log_path
+
+
+def match_company_id(company_id: int) -> str | None:
+    with open(COMPANIES_PATH, 'r', encoding='utf-8') as f:
+        companies: dict = json.load(f)
+    companies_list: list[dict] = companies["data"]
+    company_name: str | None = next(
+        (company.get('name') for company in companies_list if int(company.get('id')) == company_id),
+        None
+    )
+    return company_name

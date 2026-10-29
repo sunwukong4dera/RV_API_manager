@@ -23,7 +23,6 @@ def check_applicants_from_filtered(
 
     applicants_from_filtered_raw_dict: dict = get_incidents_list(
         limit=BASE_INCIDENTS_COUNT_FOR_CHECK_TO_APPLICANT,
-        fields=BASE_INCIDENT_FIELDS,
         filter=filters_for_applicants
     )
 

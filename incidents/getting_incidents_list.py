@@ -5,6 +5,7 @@ from requests import get
 from urllib.parse import unquote
 
 from config import RV_LINK, RV_TOKEN, RV_CERT_PATH
+from util import write_to_json_file
 
 logger = logging.getLogger(__name__)
 
@@ -61,3 +62,14 @@ def get_incidents_list(limit: int,
     logger.info('%s %s', 'ЗАПРОС:', unquote(response.url))
 
     return response.json()
+
+# write_to_json_file('../api_responses/26-10-15855.json', get_incidents_list(
+#     limit=1,
+#     filter=[
+#         {
+#             "property": "identifier",
+#             "operator": "=",
+#             "value": '26-10-15855'
+#         }
+#     ]
+# ))

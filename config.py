@@ -12,6 +12,7 @@ RV_TOKEN = os.environ['RV_TOKEN']
 RV_CERT_PATH = Path(__file__).resolve().parent / os.environ['RV_CERT_PATH']
 API_RESPONSES_PATH = Path(__file__).resolve().parent / os.environ['API_RESPONSES_PATH']
 EXTEND_FILTERS_PATH = Path(__file__).resolve().parent / os.environ['EXTEND_FILTERS_PATH']
+COMPANIES_PATH = Path(__file__).resolve().parent / os.environ['COMPANIES_PATH']
 
 BASE_INCIDENTS_COUNT_FOR_CHECK_TO_BIND=os.environ['BASE_INCIDENTS_COUNT_FOR_CHECK_TO_BIND']
 BASE_INCIDENTS_COUNT_FOR_CHECK_TO_APPLICANT=os.environ['BASE_INCIDENTS_COUNT_FOR_CHECK_TO_APPLICANT']

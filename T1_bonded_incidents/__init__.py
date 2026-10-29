@@ -1,3 +1,3 @@
-from T1_bonded_incidents.got_incident import explore_incident
+from T1_bonded_incidents.binding import binding
 
-__all__ = ['explore_incident']
+__all__ = ['binding']

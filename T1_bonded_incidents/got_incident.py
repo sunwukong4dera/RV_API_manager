@@ -52,6 +52,6 @@ def explore_incident(identifier: str):
         current_incident=incident,
     )
     logger.info(f'Длина списка кандидатов для {identifier}: {len(applicants)};'
-                f'Кандидаты: {str(*(i.get("identifier") for i in applicants if i is not None))}')
+                f'Кандидаты: {", ".join(i["identifier"] for i in applicants if i is not None)}')
 
     return company_id, applicants

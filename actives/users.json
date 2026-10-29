@@ -1,0 +1,56 @@
+{
+  "data": [
+    {
+      "uuid": "7ab09779-2b3f-472b-8d14-3516ec228bc1",
+      "id": 1235,
+      "name": "threat_hunting__test"
+    },
+    {
+      "uuid": "5ac3ca2f-5e43-4712-8e54-1fe0eae97109",
+      "id": 1203,
+      "name": "zapros"
+    },
+    {
+      "uuid": "5bdacaf8-3aab-4448-b359-b20e4dd4762b",
+      "id": 4412,
+      "name": "events__csirt_new_comment"
+    },
+    {
+      "uuid": "cf3796e1-2430-439b-83fc-35aa5bddc154",
+      "id": 1211,
+      "name": "crit_event_responsible"
+    },
+    {
+      "uuid": "f70b8581-72b0-4c27-b795-1744fe45e58d",
+      "id": 1212,
+      "name": "crit_event_take"
+    },
+    {
+      "uuid": "a7cb8f69-56e5-43c2-b2dd-bd946a20e713",
+      "id": 4413,
+      "name": "events__other_new_comment"
+    },
+    {
+      "uuid": "d04aab6e-54a7-4a87-936d-878afd09387a",
+      "id": 1213,
+      "name": "crit_event_sent"
+    },
+    {
+      "uuid": "3c1b4070-d4e8-4355-9d67-95bd3fa73db1",
+      "id": 1207,
+      "name": "fp_l1"
+    },
+    {
+      "uuid": "3fd58a2e-1530-4270-aa9d-63a51e7d46e5",
+      "id": 1214,
+      "name": "crit_event_close"
+    },
+    {
+      "uuid": "2b7204eb-dee9-4bff-9088-32eb7057fdcc",
+      "id": 1216,
+      "name": "bad_dopa"
+    }
+  ],
+  "success": true,
+  "total": 53
+}
