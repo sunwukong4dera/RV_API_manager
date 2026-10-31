@@ -18,8 +18,8 @@ def binding_rule(general: dict, second: dict, rule: dict) -> bool:
     """
     def same(field: str) -> bool:
         value = general.get(field)
-        logger.info(f'=== поле {field} основного ({general.get("identifier")}): {general.get(field)}, поле второго '
-                    f'({second.get("identifier")}): {second.get(field)}')
+        logger.info(f'=== поле {field} основного ({general.get("identifier")}): {general.get(field)},'
+                    f' поле второго ({second.get("identifier")}): {second.get(field)}')
         return value not in (None, "", [], {}) and value == second.get(field)
 
     required: list = rule.get("all", [])
@@ -43,7 +43,7 @@ def binding_rule(general: dict, second: dict, rule: dict) -> bool:
     return True
 
 
-def get_applicants_with_rule(general_incident: dict, list_incidents: list, rule: dict) -> list[dict]:
+def get_applicants_with_rule(general_incident: dict, list_incidents: list, rule: dict, rule_name: str='без названия') -> list[dict]:
     """
     функция возвращает карточки, совпавшие с основной по одному правилу
     """
@@ -52,6 +52,7 @@ def get_applicants_with_rule(general_incident: dict, list_incidents: list, rule:
     matched_incidents = []
     seen_identifiers = {general_identifier}
 
+    logger.info(f'== Првоерка по условию заупщена... ')
     for incident in list_incidents:
         identifier = incident['identifier']
 
@@ -62,7 +63,7 @@ def get_applicants_with_rule(general_incident: dict, list_incidents: list, rule:
         if binding_rule(general_incident, incident, rule):
             matched_incidents.append(incident)
             logger.info(f'Кандидат {identifier} для связывания к {general_identifier} '
-                        f'по правилу {rule.get("name", "без названия")}')
+                        f'по правилу {rule_name}')
 
     logger.info(f'Для основного инцидента {general_identifier} найдено кандидатов: {len(matched_incidents)}')
 
@@ -70,8 +71,6 @@ def get_applicants_with_rule(general_incident: dict, list_incidents: list, rule:
 
 
 def binding(identifier: str):
-    company_id, applicants_list = explore_incident(identifier)
-
     filter_incident = [
                         {
                             "property": "identifier",
@@ -93,9 +92,12 @@ def binding(identifier: str):
     if not current_incident:
         raise ValueError("ошибка binding: Инцидент не найден")
 
+    company_id, applicants_list = explore_incident(current_incident)
+
     company_name: str | None = match_company_id(company_id)
     if not company_name:
         raise ValueError("ошибка binding: Компания не найдена")
+    logger.info(f'== ID компании {company_id} преобразован в название: {company_name}')
 
     filter_company = [
         {
@@ -113,14 +115,15 @@ def binding(identifier: str):
     rules_list: list | None = rules.get("data")
     if not rules_list:
         logger.info(f'=== кандидатов нет! ===')
-        return # ничего не делать но как
+        return
 
     for rule in rules_list:
-        expression = rule.get("field_binding_rules_condition")
-        logger.info(f'условие: {expression}')
+        expression, rule_name = rule.get("field_binding_rules_condition"), rule.get("name")
+        logger.info(f'== Условие: {expression}')
         real_rules: list = transform_rule(expression)
-        logger.info(f'готовое правило: {real_rules}')
+        logger.info(f'== Готовое правило: {real_rules}')
         for real_rule in real_rules:
-            applicants = get_applicants_with_rule(current_incident, applicants_list, real_rule)
-            rule_name = rule.get("name")
-            logger.info(f'=== найденные кандидаты по правилу {rule_name}: {applicants} ===')
+            applicants = get_applicants_with_rule(current_incident, applicants_list, real_rule, rule_name=rule_name)
+            applicants_identifiers: list = [a["identifier"] for a in applicants]
+            if applicants_identifiers:
+                logger.info(f'=== найденные кандидаты по правилу "{rule_name}": {", ".join(applicants_identifiers)} ===')

@@ -62,14 +62,3 @@ def get_incidents_list(limit: int,
     logger.info('%s %s', 'ЗАПРОС:', unquote(response.url))
 
     return response.json()
-
-# write_to_json_file('../api_responses/26-10-15855.json', get_incidents_list(
-#     limit=1,
-#     filter=[
-#         {
-#             "property": "identifier",
-#             "operator": "=",
-#             "value": '26-10-15855'
-#         }
-#     ]
-# ))
