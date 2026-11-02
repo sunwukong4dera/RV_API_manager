@@ -43,9 +43,13 @@ def get_extend_filter(filename: str, company: int, externalid: str) -> list | No
         return current_filters
 
 
-def extend_filter_last_n_hours(current_filters: list, hours: int) -> list:
+def extend_filter_last_n_hours(current_filters: list, hours: int, creation: str) -> list:
+    """поиск инцидентов за <hours> часов до создания текущей карточки"""
+    current_creation = datetime.strptime(
+        creation, "%Y-%m-%dT%H:%M:%S.%fZ"
+    ).replace(tzinfo=timezone.utc)
     last_n_hours = (
-            datetime.now(timezone.utc) - timedelta(hours=hours)
+            current_creation - timedelta(hours=hours)
     ).isoformat(timespec="milliseconds").replace("+00:00", "Z")
 
     filter_last_n_hours = [

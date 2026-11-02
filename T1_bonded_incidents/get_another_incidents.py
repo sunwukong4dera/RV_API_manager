@@ -46,10 +46,11 @@ def check_applicants_from_filtered(
             applicants_except_current.append(incident)
 
     oldest = get_oldest(applicants_except_current)
+    oldest_identifier = oldest["identifier"] if oldest is not None else "нет"
 
     logger.info(f'Подбор кандидатов для: {current_identifier}\n'
         f' - указанные фильтры: {[f.get("value") for f in filters_for_applicants]}\n'
         f' - длина списка кандидатов: {len(applicants_except_current)}\n'
-        f' - старейший кандидат: {oldest["identifier"]}\n')
+        f' - старейший кандидат: {oldest_identifier}\n')
 
     return applicants_except_current

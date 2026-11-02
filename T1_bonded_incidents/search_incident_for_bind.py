@@ -1,3 +1,10 @@
+"""СТАРАЯ ВЕРСИЯ: циклический поиск инцидентов.
+
+Не используется текущей точкой запуска main.py. Сохранена для справки;
+импорты и логика могут не соответствовать актуальной версии проекта.
+Текущий сценарий: main.py -> T1_bonded_incidents/binding.py.
+"""
+
 import logging
 from time import sleep
 from datetime import datetime

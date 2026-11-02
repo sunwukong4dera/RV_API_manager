@@ -25,7 +25,9 @@ def explore_incident(incident: dict):
     ])
 
     applicants: list = check_applicants_from_filtered(
-        filters_for_applicants=extend_filter_last_n_hours(filters_for_applicants, int(HOURS_FINDING)),
+        filters_for_applicants=extend_filter_last_n_hours(
+            filters_for_applicants, int(HOURS_FINDING), creation=incident['creation']
+        ),
         current_incident=incident,
     )
     logger.info(f'=== Длина списка кандидатов для {identifier}: {len(applicants)}; '

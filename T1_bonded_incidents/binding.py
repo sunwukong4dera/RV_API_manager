@@ -1,7 +1,7 @@
 import logging
 
 from incidents import get_incidents_list
-from util import match_company_id, get_incident_results
+from util import match_company_id, get_incident_results, get_oldest
 from actives import get_binding_rules
 from .got_incident import explore_incident
 from .transform_rule import transform_rule
@@ -112,18 +112,44 @@ def binding(identifier: str):
         filter=filter_company,
         fields=binding_rules_fields
     )
+
+    if not isinstance(rules, dict) or rules.get("success") is not True:
+        raise ValueError("ошибка binding (rules): не удалось получить правила связывания")
+
     rules_list: list | None = rules.get("data")
     if not rules_list:
-        logger.info(f'=== кандидатов нет! ===')
+        logger.info(f'=== правил связывания для компании "{company_name}" нет! ===')
         return
+
+    matched_by_identifier = {}
 
     for rule in rules_list:
         expression, rule_name = rule.get("field_binding_rules_condition"), rule.get("name")
         logger.info(f'== Условие: {expression}')
-        real_rules: list = transform_rule(expression)
+
+        try:
+            real_rules: list = transform_rule(expression)
+        except ValueError as error:
+            logger.error(f'Ошибка в правиле "{rule_name}": {error}. Правило пропущено!!!') # уведомление ?
+            continue
+
         logger.info(f'== Готовое правило: {real_rules}')
         for real_rule in real_rules:
             applicants = get_applicants_with_rule(current_incident, applicants_list, real_rule, rule_name=rule_name)
+            for applicant in applicants:
+                matched_by_identifier[applicant["identifier"]] = applicant
+
             applicants_identifiers: list = [a["identifier"] for a in applicants]
             if applicants_identifiers:
                 logger.info(f'=== найденные кандидаты по правилу "{rule_name}": {", ".join(applicants_identifiers)} ===')
+
+
+    matched_incidents = list(matched_by_identifier.values())
+    main_incident = get_oldest(matched_incidents)
+    if main_incident is None:
+        logger.info(f'=== подходящих кандидатов для {identifier} нет! ===')
+        return
+
+    logger.info(f'=== основной инцидент для {identifier}: {main_incident["identifier"]}; '
+                f'уникальных кандидатов: {len(matched_incidents)} ===')
+    return main_incident

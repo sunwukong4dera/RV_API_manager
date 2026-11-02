@@ -17,7 +17,10 @@ def get_asset_data(request_params: dict,
         url,
         headers=headers,
         params=request_params,
-        verify=RV_CERT_PATH
+        verify=RV_CERT_PATH,
+        timeout=10,
     )
+
+    asset_data.raise_for_status()
 
     return asset_data
