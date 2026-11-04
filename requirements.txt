@@ -4,3 +4,8 @@ idna==3.20
 python-dotenv==1.2.4
 requests==2.34.2
 urllib3==2.8.0
+pandas==2.2.3
+numpy==2.4.6
+python-dateutil==4.0.0
+pytz==2026.6
+tzdata==2026.6

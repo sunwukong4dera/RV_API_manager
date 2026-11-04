@@ -64,13 +64,13 @@ def search_incident(
                 except (KeyError, TypeError, ValueError):
                     logger.warning(f'Пропуск {identifier}: неверная дата creation')
                     continue
-                logger.info('%s %s', 'Инцидент для связывания:', incident)
+                logger.info(f'Инцидент для связывания: {incident}')
 
                 incident_owner = incident.get('incident_owner')
                 if isinstance(incident_owner, dict):
                     incident_owner_id = incident_owner.get('id')
                     if incident_owner_id is not None:
-                        logger.info('%s %s', ' - ответственный (id):', incident_owner_id) # todo использовать актив уведомлений (?)
+                        logger.info(f' - ответственный (id): {incident_owner_id}') # todo использовать актив уведомлений (?)
                     else:
                         logger.info(' - нет ответственного')
                 logger.info('Начало проверки...')

@@ -14,7 +14,7 @@ def main():
             identifier: str = sys.argv[1]
             binding(identifier)
     except Exception as error:
-        logger.exception('%s', error)
+        logger.exception(f'{error}')
         raise
     finally:
         logging.shutdown()

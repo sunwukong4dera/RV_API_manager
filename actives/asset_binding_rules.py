@@ -54,6 +54,6 @@ def get_binding_rules(limit: int,
                               asset_type_id=ASSET_BINDING_RULES
                               )
 
-    logger.info('%s %s', 'ЗАПРОС:', unquote(response.url))
+    logger.info(f'ЗАПРОС: {unquote(response.url)}')
 
     return response.json()

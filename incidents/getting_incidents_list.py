@@ -59,6 +59,6 @@ def get_incidents_list(limit: int,
                    timeout=10)
 
     response.raise_for_status()
-    logger.info('%s %s', 'ЗАПРОС:', unquote(response.url))
+    logger.info(f'ЗАПРОС: {unquote(response.url)}')
 
     return response.json()

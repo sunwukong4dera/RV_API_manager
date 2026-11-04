@@ -1,10 +1,12 @@
 import logging
 
+from config import BINDING_RULE_PRIORITY_FIELD
 from incidents import get_incidents_list
 from util import match_company_id, get_incident_results, get_oldest
 from actives import get_binding_rules
 from .got_incident import explore_incident
-from .transform_rule import transform_rule
+from .incident_frame import prepare_incident_frame
+from .frame_rules import apply_frame_rules
 
 logger = logging.getLogger(__name__)
 
@@ -107,6 +109,9 @@ def binding(identifier: str):
         }
     ]
     binding_rules_fields = ["name", "field_binding_rules_org", "field_binding_rules_condition"]
+    priority_field = BINDING_RULE_PRIORITY_FIELD
+    if priority_field:
+        binding_rules_fields.append(priority_field)
     rules = get_binding_rules(
         limit=10,
         filter=filter_company,
@@ -121,35 +126,16 @@ def binding(identifier: str):
         logger.info(f'=== правил связывания для компании "{company_name}" нет! ===')
         return
 
-    matched_by_identifier = {}
-
-    for rule in rules_list:
-        expression, rule_name = rule.get("field_binding_rules_condition"), rule.get("name")
-        logger.info(f'== Условие: {expression}')
-
-        try:
-            real_rules: list = transform_rule(expression)
-        except ValueError as error:
-            logger.error(f'Ошибка в правиле "{rule_name}": {error}. Правило пропущено!!!') # уведомление ?
-            continue
-
-        logger.info(f'== Готовое правило: {real_rules}')
-        for real_rule in real_rules:
-            applicants = get_applicants_with_rule(current_incident, applicants_list, real_rule, rule_name=rule_name)
-            for applicant in applicants:
-                matched_by_identifier[applicant["identifier"]] = applicant
-
-            applicants_identifiers: list = [a["identifier"] for a in applicants]
-            if applicants_identifiers:
-                logger.info(f'=== найденные кандидаты по правилу "{rule_name}": {", ".join(applicants_identifiers)} ===')
-
-
-    matched_incidents = list(matched_by_identifier.values())
-    main_incident = get_oldest(matched_incidents)
-    if main_incident is None:
+    frame = prepare_incident_frame(applicants_list)
+    matched_frame = apply_frame_rules(current_incident, frame, rules_list, priority_field)
+    if matched_frame.empty:
         logger.info(f'=== подходящих кандидатов для {identifier} нет! ===')
         return
 
-    logger.info(f'=== основной инцидент для {identifier}: {main_incident["identifier"]}; '
-                f'уникальных кандидатов: {len(matched_incidents)} ===')
-    return main_incident
+    general_identifier = matched_frame.iloc[0]['identifier']
+    # возвращаем исходную карточку с исходными типами полей для будущего POST.
+    general_incident = next(incident for incident in applicants_list
+                         if incident['identifier'] == general_identifier)
+    logger.info(f'=== основной инцидент для {identifier}: {general_incident["identifier"]}; '
+                f'уникальных кандидатов: {len(matched_frame)} ===')
+    return general_incident
