@@ -5,6 +5,7 @@ from itertools import groupby
 import pandas as pd
 
 from .transform_rule import transform_rule
+from .multi_values import has_multi_values, multi_value_mask
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +21,10 @@ def rule_mask(general_incident: dict, frame: pd.DataFrame, rule: dict) -> pd.Ser
             raise ValueError(f'Поле {field}: сравнение объектов и списков масками пока не поддерживается')
         if pd.isna(value):
             return pd.Series(False, index=frame.index)
-        mask = frame[field].notna() & frame[field].eq(value).fillna(False)
+        if has_multi_values(field, value, frame[field]):
+            mask = multi_value_mask(value, frame[field])
+        else:
+            mask = frame[field].notna() & frame[field].eq(value).fillna(False)
         logger.info(f'=== поле {field} основного ({general_incident.get("identifier")}): {value}; '
                     f'совпадений: {int(mask.sum())}')
         return mask
